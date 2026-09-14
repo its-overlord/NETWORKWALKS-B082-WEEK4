@@ -76,7 +76,7 @@ Then I decided to use the robots.txt file that all web browsers - it shows what 
 <img width="522" height="373" alt="image" src="https://github.com/user-attachments/assets/9c751d83-ed70-425f-8ff1-0082f1a5341d" />
 
 But during the period where I was trying brute force, I noticed a weakness with the patient portal.  **When going into the patient portal, it explicitly tells you what is wrong (username is wrong), which should not be so; it is supposed to give general info so that bad actors would not be able to guess which info they have is wrong or right (login failed).**
-So then I decided that getting a username would be easier. Used the username, entered in any password and then decided the SSH Injection would be able to break the login page.
+So then I decided that getting a username would be easier. Used the username, entered in any password and then decided the SQL Injection would be able to break the login page.
 <img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/d6e0533f-d06c-460b-919b-038704a51c99" />
 GOT INTO THE PATIENT PORTAL AND DOWNLOADED THE ENCRYPTED DOCUMENTS.
 
