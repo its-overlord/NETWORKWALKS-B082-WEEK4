@@ -105,5 +105,9 @@ Clicked on the link and got redirected to a sql document that had all staff info
 
 This information can also be copied and saved on my personal device and fine-tuned to be sold to bad actors.
 
-The overall vulnerability of the system is very high to bad actors!!
+---
 
+## 🔚 Conclusion 
+
+The overall vulnerability of the system is very high to bad actors!!
+This assessment found a complete attack chain from the login page to highly sensitive internal data. No sophisticated tools or knowledge were required. All vulnerabilities found in this report are well-known and have well-established fixes. I recommend the client address all Critical and High findings immediately before the system is used to store or serve real patient data. 
