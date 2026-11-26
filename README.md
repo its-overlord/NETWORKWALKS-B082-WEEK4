@@ -1,113 +1,382 @@
-# networkwalks-B082-week4
-Performing Penetration Testing on the Mediroza Hospital Website with written authorization to help in detecting the vulnerabilities they have in their system.
+# Publicly Accessible Database Backup — Mediroza Hospital
 
-<div align="center">
-
-# 🔐 PENETRATION TESTING REPORT: Mediroza Hospital Black Box Test
-Web Assessment
-
-</div>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Skill-Cybersecurity-404040?style=flat-square&labelColor=C0000" />
-  <img src="https://img.shields.io/badge/Ver-Virtualbox%20v7.2-0070C0?style=flat-square&labelColor=000000" />
-  <img src="https://img.shields.io/badge/Kali%20Linux-v2026.2-E87500?style=flat-square&labelColor=000000&logo=kalilinux&logoColor=white" />
-  <img src="https://img.shields.io/badge/Skill-Linux-404040?style=flat-square&labelColor=C00000" />
-  <img src="https://img.shields.io/badge/Penetration%20Testing-C00000?style=flat-square&labelColor=000000&logo=kalilinux&logoColor=white" />
-  <img src="https://img.shields.io/badge/Skill-Virtualization-404040?style=flat-square&labelColor=C00000" />
-  <img src="https://img.shields.io/badge/GitHub-404040?style=flat-square&labelColor=0070C0&logo=github&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kali%20Linux-404040?style=flat-square&labelColor=C00000&logo=kalilinux&logoColor=white" />
-  <img src="https://img.shields.io/badge/NetworkWalks-404040?style=flat-square&labelColor=C00000" />
-  <img src="https://img.shields.io/badge/Ethical%20Hacking-E87500?style=flat-square&labelColor=000000&logo=kalilinux&logoColor=white" />
-  <img src="https://img.shields.io/badge/Ibunkunoluwa%20Fasesan-E0FFFF?style=flat-square" />
-</p>
+**NETWORKWALKS Cybersecurity Internship — Final Project**
 
 ---
 
-|  Pentester Name       | Ibunkunoluwa Fasesan   |
-| ------------------ | ------------------  |
-|  Program/Batch         | B082-Networkwalks        |
-|  Date       | 11th September 2026               |
-| Modules completed       | W4 Black Box Penetration Testing    |
-| Client/Target      | Mediroza Hospital  |
-| Permission secured from client?     | Yes  |
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Project Objectives](#project-objectives)
+- [Environment and Tools](#environment-and-tools)
+- [Assessment Journey](#assessment-journey)
+  - [1. Reconnaissance](#1-reconnaissance)
+  - [2. Directory Discovery](#2-directory-discovery)
+  - [3. Database Backup Exposure](#3-database-backup-exposure)
+  - [4. Database Inspection](#4-database-inspection)
+  - [5. Vulnerability Documentation](#5-vulnerability-documentation)
+- [Attack Path](#attack-path)
+- [Vulnerability Findings](#vulnerability-findings)
+- [Security Impact](#security-impact)
+- [Remediation Priorities](#remediation-priorities)
+- [What I Learned](#what-i-learned)
+- [Project Deliverables](#project-deliverables)
+- [Repository Structure](#repository-structure)
+- [Evidence and Disclosure](#evidence-and-disclosure)
+- [Ethical Scope](#ethical-scope)
+- [Author](#author)
 
 ---
 
-## 🔔 Liability Disclaimer
+## Project Overview
 
-I have performed these activities only on the systems &amp; devices where I had secured written permission
-or the devices/systems that I own myself. All these materials are for education and research purpose
-only. Do not use anything from here to break the law. Every action you take is your own responsibility.
-Misuse can lead to criminal charges, heavy fines, loss of your job and a permanent record. In most
-countries unauthorized access is a crime even when nothing is damaged.
+This project documents an individual black-box web application security assessment conducted as the final project of the Networkwalks Cybersecurity Internship.
 
----
+The assessment involved performing passive and active reconnaissance against the Mediroza General Hospital website to identify potential security weaknesses.
 
-## 🔰 Introduction/ Project Summary
+During reconnaissance, I inspected the website's publicly accessible `robots.txt` file and discovered a reference to an old application directory. Further investigation revealed that the directory contained a publicly accessible SQL database backup.
 
-This report contains black box penetration testing activities completed in the 4th week of the internship program with Networkwalks. This lab had the following primary activities:
-1. Milestone 1 — Initial Access 
-2. Milestone 2 — Crack the Encryption 
-3. Milestone 3 — Deep Reconnaissance
-4. Milestone 4 — Penetration Testing Report
-This report documents my hands-on experience and a step-by-step guide on how tested for vulnerabilities in the system.
+The backup file could be opened directly through a web browser without authentication. Inspection of the SQL dump revealed database structures and records containing sensitive employee and shareholder information.
 
----
+This finding demonstrated how improperly exposed legacy directories and database backups can lead to significant sensitive information disclosure.
 
-## ⚙️ Tools and Technologies
+> **Public Disclosure Note:** This repository is intended to serve as a sanitised cybersecurity portfolio project. Personal information, individual database records, national identification numbers, contact details, salary values and other sensitive information must not be published.
 
-The lab provides an isolated and controlled environment for cybersecurity learning and authorized security testing.
+## Project Objectives
 
-|  Tool       | Purpose |
-| ------------------ | ------------------  |
-| Kali       | This test was performed in the virtual box       |
-| Curl      | HTTP header and server information gathering.  |
-|  NetworkWalks Hash-Calculator      | Used this to find the hashing for encrypted documents  |
-| NetworkWalks Password-Cracker     | Used to break the encrypted documents using directories |
+The assessment focused on the following objectives:
 
----
+- Perform passive and active reconnaissance against the target website.
+- Examine publicly accessible resources for information disclosure.
+- Inspect the website's `robots.txt` file.
+- Identify potentially exposed directories and files.
+- Investigate discovered resources for security misconfigurations.
+- Verify whether sensitive resources were accessible without authentication.
+- Examine the exposed SQL backup and identify sensitive database structures.
+- Document the vulnerability, potential impact and recommended remediation.
 
-## 1️⃣ Milestone 1 — Initial Access
+## Environment and Tools
 
-The goal was to get access to the any of the login pages and gather any information I can on the target. The first thing I did was to perform basic reconnaissance using all the footprinting steps I learnt in week 2. I gathered information on the firewall type using waw00f, I also used the 'whois' command to get information on domain registration and other target information that i felt would be useful. I started the project using brute force which after a bit of research, showed that the server might block me out if I try too many attempts.
+The assessment was performed using Kali Linux.
 
-Then I decided to use the robots.txt file that all web browsers - it shows what pages can or cannot be accessed in a website. 
-<img width="522" height="373" alt="image" src="https://github.com/user-attachments/assets/9c751d83-ed70-425f-8ff1-0082f1a5341d" />
+**Tools and techniques used:**
 
-But during the period where I was trying brute force, I noticed a weakness with the patient portal.  **When going into the patient portal, it explicitly tells you what is wrong (username is wrong), which should not be so; it is supposed to give general info so that bad actors would not be able to guess which info they have is wrong or right (login failed).**
-So then I decided that getting a username would be easier. Used the username, entered in any password and then decided the SQL Injection would be able to break the login page.
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/d6e0533f-d06c-460b-919b-038704a51c99" />
-GOT INTO THE PATIENT PORTAL AND DOWNLOADED THE ENCRYPTED DOCUMENTS.
+- Kali Linux
+- Web Browser
+- `robots.txt` Inspection
+- Directory Browsing and Enumeration
+- Browser-Based SQL File Inspection
+- HTTP Response Observation
+- Manual Vulnerability Analysis
+- Technical Evidence Collection
+- Security Vulnerability Reporting
 
 ---
 
-## 2️⃣ Milestone 2 — Crack the Encryption
+## Assessment Journey
 
-Cracking the encrypted document was much easier and took the least amount of time. The first thing that was done was to get the hash of all the encrypted documents using the Networkwalks Hash Calculator. Once that was achieved, the password cracker was used (you can also use Johnny at this step but the networkwalks tool was used for this project). I also had to use multiple directories/wordlist to get the right password for all three documents.
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/dc28f3af-d574-4182-89b0-4892bc725059" />
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/613d4a65-013b-45ee-80c3-dc0ade7edb73" />
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/ebff84fd-0d13-4424-bcfa-de10c6f424c4" />
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/8c0e5306-f600-4281-8152-284ff923f7f3" />
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/704b2d26-ccc6-413b-a3bd-7cce37e4a918" />
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/c5704dec-9670-4b0a-893b-b52c65ba9b6c" />
+### 1. Reconnaissance
+
+The assessment began with passive and active reconnaissance against the target website.
+
+During this phase, I examined publicly accessible resources to identify potentially sensitive information and exposed application directories.
+
+One resource I inspected was the website's `robots.txt` file.
+
+The inspection revealed an old directory referenced under a `Disallow` directive.
+
+**Key Observation:** A directory that was not intended for search engine crawling was publicly discoverable through the website's `robots.txt` file.
+
+### 2. Directory Discovery
+
+After identifying the directory in `robots.txt`, I navigated to the directory through my web browser.
+
+The directory exposed a listing of its contents, which included a database backup file named:
+
+```text
+mediroza_db_backup_2019.sql
+```
+
+This discovery indicated that directory indexing was enabled and that a potentially sensitive backup file was exposed through the web server.
+
+**Finding:** Publicly accessible legacy directory exposing sensitive files.
+
+### 3. Database Backup Exposure
+
+I selected the SQL backup file from the directory listing.
+
+The file opened directly in my web browser without requiring a username, password or any form of authentication.
+
+This confirmed that the database backup was retrievable by an unauthenticated visitor.
+
+**Exposed Resource:**
+
+```text
+mediroza_db_backup_2019.sql
+```
+
+**Finding:** Publicly accessible database backup without authentication.
+
+### 4. Database Inspection
+
+After accessing the backup, I inspected the SQL file directly in the browser.
+
+The database information identified in the backup included:
+
+| Attribute | Details |
+|---|---|
+| Database Name | `mediroza_hr` |
+| Database Type | MySQL |
+| Backup Date Indicated | 27 August 2019 |
+
+Two tables containing sensitive information were identified.
+
+**Staff Table (`staff`)**
+
+The table contained employee-related information, including:
+
+- Employee ID
+- Full Name
+- Job Title
+- Department
+- Email Address
+- Telephone Number
+- National Identification Number
+- Monthly Salary
+- Employment Commencement Date
+
+**Shareholders Table (`shareholders`)**
+
+The table contained shareholder-related information, including:
+
+- Shareholder Name
+- Percentage of Ownership
+- Number of Shares Held
+- Share Classification
+
+**Database Statistics:**
+
+- 30 staff records
+- 10 shareholder records
+
+Individual records and personal values are intentionally excluded from this public documentation.
+
+### 5. Vulnerability Documentation
+
+Following the discovery and inspection, I documented the vulnerability in a technical security report.
+
+The report covered:
+
+- Vulnerability Description
+- Affected Resource
+- Technical Discovery Process
+- Steps to Reproduce
+- Observed and Expected Results
+- Security Impact
+- Recommended Remediation
+- Supporting Screenshots and Evidence
+
+The finding was classified as **High (Provisional)** due to the sensitivity of the information exposed.
 
 ---
 
-## 3️⃣ Milestone 3 — Deep Reconnaissance
+## Attack Path
 
-At this point I was told to get some more private information on the hospital website, so I opened a cmd terminal in the documents that have now been unlocked and I used this command **'exiftool report3_open.pdf '** to know if some information was moved or where they are located. This led me to the /old file from the roborts.txt previously.
-Searched https://medirozahospital.com/old/ and it loaded up the back end information and the hidden server.
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/b22164fd-5b9c-4247-bc89-7fbf2db5d076" />
+The discovery process followed this sequence:
 
-Clicked on the link and got redirected to a sql document that had all staff information, their salaries, phone numbers even shareholders information!!
-<img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/e954a2db-e76e-4ec7-81e2-94373042f0dd" />
+```text
+Target Website
+      |
+      v
+Passive and Active Reconnaissance
+      |
+      v
+robots.txt Inspection
+      |
+      v
+Discovery of Legacy Directory
+      |
+      v
+Public Directory Listing
+      |
+      v
+SQL Database Backup Discovered
+      |
+      v
+Unauthenticated Browser Access
+      |
+      v
+SQL Backup Inspection
+      |
+      v
+Sensitive Staff and Shareholder
+Information Identified
+      |
+      v
+Vulnerability Documentation
+```
 
-This information can also be copied and saved on my personal device and fine-tuned to be sold to bad actors.
+The vulnerability was demonstrated through ordinary web browsing and inspection of the publicly accessible SQL backup.
+
+No authentication bypass, server-side shell, malware deployment, persistence or destructive modification was required to demonstrate this finding.
+
+## Vulnerability Findings
+
+The primary finding documented in this assessment was:
+
+| ID | Severity | Finding |
+|---|---|---|
+| F01 | High (Provisional) | Publicly accessible database backup exposing sensitive information |
+
+### Vulnerability Classification
+
+- **Category:** Sensitive Information Disclosure
+- **CWE:** CWE-530 – Exposure of Backup File to an Unauthorized Control Sphere
+- **OWASP:** A05:2021 – Security Misconfiguration
+- **Authentication Required:** None observed
+
+## Security Impact
+
+The exposure of the database backup could have several security implications.
+
+### Identity Theft
+
+Exposure of employee national identification numbers and personal information could facilitate identity fraud.
+
+### Targeted Phishing
+
+Employee names, departments, job titles and email addresses could be used to construct convincing phishing campaigns.
+
+### Privacy Violations
+
+Disclosure of employee contact information and salary records could compromise personal privacy.
+
+### Corporate Information Disclosure
+
+Shareholder identities, ownership percentages and share classifications could expose confidential organizational information.
+
+### Social Engineering
+
+The disclosed information could be used to impersonate employees or manipulate organizational personnel.
 
 ---
 
-## 🔚 Conclusion 
+## Remediation Priorities
 
-The overall vulnerability of the system is very high to bad actors!!
-This assessment found a complete attack chain from the login page to highly sensitive internal data. No sophisticated tools or knowledge were required. All vulnerabilities found in this report are well-known and have well-established fixes. I recommend the client address all Critical and High findings immediately before the system is used to store or serve real patient data. 
+### Immediate Actions
+
+- Remove the exposed database backup from the publicly accessible web directory.
+- Restrict public access to the affected directory.
+- Preserve and review relevant web server access logs.
+- Assess whether unauthorized parties accessed or downloaded the backup.
+
+### Short-Term Actions
+
+- Store database backups outside the web root.
+- Implement appropriate access controls and authentication for backup storage.
+- Disable directory indexing where it is not required.
+- Review the web server for other exposed backup files and sensitive resources.
+- Restrict public access to sensitive file extensions and backup directories.
+
+### Long-Term Actions
+
+- Implement a secure database backup management policy.
+- Encrypt backups at rest and during transfer.
+- Conduct periodic security assessments.
+- Introduce continuous monitoring for exposed sensitive resources.
+- Establish appropriate data protection and incident response procedures.
+
+> **Important:** Removing a directory or filename from `robots.txt` does not resolve the underlying vulnerability. The database backup itself must be removed from public access.
+
+---
+
+## What I Learned
+
+### Reconnaissance Can Reveal More Than Expected
+
+The inspection of a seemingly ordinary `robots.txt` file led to the discovery of a publicly accessible legacy directory and a sensitive database backup.
+
+### Information Disclosure Is a Serious Security Issue
+
+A database backup does not need to be actively exploited to create a security risk. Making sensitive information publicly accessible is itself a significant security weakness.
+
+### Directory Indexing Can Expose Sensitive Resources
+
+Improperly configured directory listings can reveal files that should only be available to authorised personnel.
+
+### Evidence-Based Reporting Matters
+
+Identifying a vulnerability is only one part of penetration testing. Documenting the discovery process, demonstrating accessibility, explaining the potential impact and providing actionable remediation recommendations are equally important.
+
+### Security Misconfigurations Can Expose Critical Information
+
+This assessment reinforced the importance of secure backup storage, appropriate access controls and proper web server configuration.
+
+---
+
+## Project Deliverables
+
+A technical Security Vulnerability Report documenting the publicly accessible database backup, including:
+
+- Vulnerability Overview
+- Executive Summary
+- Technical Details
+- Steps to Reproduce
+- Security Impact
+- Recommended Remediation
+- Supporting Screenshots and Evidence
+- Conclusion and Severity Assessment
+
+The report is included in this repository in a sanitised format.
+
+## Repository Structure
+
+```text
+networkwalks-B082-week4-mediroza-pentest/
+│
+├── evidence/
+│   ├── 01-robots-txt-directory-disclosure.png
+│   ├── 02-public-directory-listing.png
+│   └── 03-database-backup-structure-redacted.png
+│
+├── report/
+│   └── Security_Vulnerability_Report.pdf
+│
+└── README.md
+```
+
+## Evidence and Disclosure
+
+The evidence included in this repository should be sanitised to demonstrate the vulnerability without exposing personal or confidential information.
+
+The following information must not be published:
+
+- Employee national identification numbers
+- Employee telephone numbers and email addresses
+- Individual salary records
+- Shareholder personal information
+- Raw SQL database backups
+- Other confidential organisational information
+
+The original database contents are not included in this repository.
+
+## Ethical Scope
+
+This project was conducted as an individual cybersecurity assessment under the Networkwalks Cybersecurity Internship.
+
+The documentation describes the activities performed and observations recorded during the assessment.
+
+The project is presented for educational and defensive cybersecurity purposes. Sensitive information and unnecessary live-target details are excluded from the public repository.
+
+## Author
+
+**Chimezie Uche Samuel**
+
+Networkwalks Cybersecurity Internship  
+Final Individual Penetration Testing Project
+
+**GitHub:** (https://github.com/its-overlord)
+
+---
+
+**Project Focus:** Web Application Security | Reconnaissance | Directory Enumeration | Sensitive Information Disclosure | Vulnerability Assessment | Security Reporting
